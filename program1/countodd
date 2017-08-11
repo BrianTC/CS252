@@ -1,7 +1,0 @@
-		
-	loop:
-		mov		r3,#29
-		lsl		r2,r3,#31
-		cmp		r2,#0
-		bne loop
-		add r1,r1,#1
