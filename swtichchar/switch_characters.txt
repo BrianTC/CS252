@@ -1,0 +1,44 @@
+Brian Chickey
+------------------------------------------------------------------------------------
+Original string: sir sid easily teases sea sick seals
+Changed string: sir sid Xasily tXasXs sXa sick sXals
+************************************************************************************
+D:\GoogleDrive\SchoolDocs\College\Fall 2016\CS252\swtichchar\switchchar.s
+.global subs 
+subs: 
+	stmfd sp!,{v1-v6, lr} 
+	mov v1,a1 				@copy pointer address , a1 will be overwritten 
+	mov v2,a2 				@copy char we look for 
+	mov v3,a3 				@copy char we replace with
+	bl strlen 				@get the length of a string into a1
+	add a1,a1,#1 			@account for null byte
+	mov v4,a1 				@move the stringlength to a1 for counting
+	bl malloc 				@allocate memory to make a new string
+	mov v5,#0  				@need an iterator for adding to the string
+loop:
+	ldrb v6,[v1],#1 		@load in characters from argument string arg# 1
+	cmp v6,v2 				@compare loaded char to the one we want to match arg# 2
+	streqb v3,[a1,v5] 	@if it was a match replace it with arg# 3
+	strneb v6,[a1,v5] 	@otherwise give it the same value
+	add v5,v5,#1			@increment position counter
+	subs v4,v4,#1 		@decrement loop counter
+	bne loop 				@continue if loop counter isn't zero
+	ldmfd sp!,{v1-v6, pc} 
+.end
+@a2,a3 are safe to use as is however I decided to move them into v_n for consistancy 
+------------------------------------------------------------------------------------
+D:\GoogleDrive\SchoolDocs\College\Fall 2016\CS252\swtichchar\switchchar.c
+#include <stdlib.h>
+#include <stdio.h>
+extern char * subs( char *string, char this_c, char that_c ) ;
+int main(int argc, char *argv[] )
+{
+	char this_c = 'e';
+	char that_c = 'X';
+	char orgstr[] = "sir sid easily teases sea sick seals";
+	char * result;
+	result = subs( orgstr, this_c, that_c );
+	printf( "Original string: %s\n", orgstr );
+	printf( "Changed string: %s\n", result );
+	return 0;
+}
